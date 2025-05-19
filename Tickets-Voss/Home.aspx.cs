@@ -62,22 +62,34 @@ namespace Tickets_Voss
 
         protected void btnExportarExcel_Click(object sender, EventArgs e)
         {
-            int mes = int.Parse(ddlMes.SelectedValue);
-            DataTable dt = ObtenerResumenPorMes(mes);
+            // Prepara el contenido para exportar
+            DataTable dt = ObtenerTicketsParaExportar();
 
             Response.Clear();
             Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment;filename=ResumenTicketsMes.xls");
+            Response.AddHeader("content-disposition", "attachment;filename=Tickets_Solicitudes.xls");
+            Response.Charset = "";
             Response.ContentType = "application/vnd.ms-excel";
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.Append("<table border='1'>");
-            sb.Append("<tr><th>Mes</th><th>Total Tickets</th></tr>");
+
+            // Agregar los encabezados de la tabla
+            sb.Append("<tr>");
+            foreach (DataColumn column in dt.Columns)
+            {
+                sb.Append("<th>" + column.ColumnName + "</th>");
+            }
+            sb.Append("</tr>");
+
+            // Agregar las filas de la tabla
             foreach (DataRow row in dt.Rows)
             {
                 sb.Append("<tr>");
-                sb.Append("<td>" + row["Mes"] + "</td>");
-                sb.Append("<td>" + row["Total"] + "</td>");
+                foreach (var item in row.ItemArray)
+                {
+                    sb.Append("<td>" + item.ToString() + "</td>");
+                }
                 sb.Append("</tr>");
             }
             sb.Append("</table>");
@@ -86,6 +98,33 @@ namespace Tickets_Voss
             Response.Flush();
             Response.End();
         }
+        private DataTable ObtenerTicketsParaExportar()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["ConexionTickets"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT 
+                            Id,
+                            Nombre,
+                            Apellido,
+                            Departamento,
+                            Telefono,
+                            Correo,
+                            Categoria,
+                            Descripcion,
+                            Estatus,
+                            FechaRegistro,
+                            FechaFin,
+                            AsignadoA
+                        FROM Solicitudes";
+
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                return dt;
+            }
+        }
+
 
         private DataTable ObtenerResumenPorMes(int mes)
         {

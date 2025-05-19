@@ -17,7 +17,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <script src="Scripts/sweetalert2.js"></script>
 
-    <style>
+   <style>
         body {
             background: #f3f4f6;
             font-family: 'Arial Rounded MT', sans-serif;
@@ -67,12 +67,15 @@
             white-space: nowrap;
             font-size: 14px;
         }
- 
 
-        .estatus-recibido { color: green; font-weight: bold; }
+        .table-custom tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .estatus-asignado { color: green; font-weight: bold; }
         .estatus-enproceso { color: orange; font-weight: bold; }
         .estatus-cerrado { color: red; font-weight: bold; }
-
+         .estatus-recibido { color: green; font-weight: bold; }
 
         .descripcion-columna {
             max-width: 200px;
@@ -106,17 +109,50 @@
         }
 
         .scrollable-table-container {
-          max-height: 500px; /* Ajusta la altura según lo que necesites */
+          max-height: 500px;
           overflow-y: auto;
           overflow-x: auto;
           border: 1px solid #ccc;
           border-radius: 12px;
         }
 
+        .card-custom {
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
         h4 {
             text-align: center;
             font-weight: 600;
             color: #111827;
+        }
+
+        .card-icon {
+            height: 120px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .btn-info {
+            background-color: #3b82f6;
+            border-color: #2563eb;
+        }
+
+        .btn-info:hover {
+            background-color: #2563eb;
+        }
+
+        .dropdown-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .dropdown-container .form-select {
+            width: 200px;
         }
     </style>
 </head>
@@ -171,7 +207,7 @@
 </div>
 
 
-<!-- Agrega el GridView real para contener el resumen del mes (oculto visualmente si solo es para exportar) -->
+
 <asp:GridView ID="gvResumenMensual" runat="server" CssClass="table table-bordered table-sm d-none" />
 
 
@@ -217,7 +253,9 @@
                     <asp:TemplateField HeaderText="Estatus">
                  <ItemTemplate>
                    <asp:Label ID="lblEstatus" runat="server" Text='<%# Eval("Estatus") %>'
-                       CssClass='<%# Eval("Estatus").ToString() == "Recibido" ? "estatus-recibido" : (Eval("Estatus").ToString() == "En Proceso" ? "estatus-enproceso" : "estatus-cerrado") %>'>
+                       CssClass='<%# Eval("Estatus").ToString() == "Asignado" ? "estatus-asignado" : 
+                      (Eval("Estatus").ToString() == "Recibido" ? "estatus-recibido" : 
+                      (Eval("Estatus").ToString() == "En Proceso" ? "estatus-enproceso" : "estatus-cerrado")) %>'>
                    </asp:Label>
                  </ItemTemplate>
                  </asp:TemplateField>
@@ -260,7 +298,6 @@
                                  <label><strong>Descripción:</strong></label>
                                    <div id="descripcionContainer" runat="server" class="descripcion-scroll"></div>
                                </div>
-
 
                             <label>Asignado A:</label>
                             <asp:DropDownList ID="ddlAsignadoA" runat="server" CssClass="form-select"></asp:DropDownList>

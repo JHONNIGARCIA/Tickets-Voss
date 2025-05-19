@@ -1,0 +1,25 @@
+﻿CREATE TABLE Usuarios (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100) NOT NULL,
+    Correo NVARCHAR(255) NOT NULL UNIQUE,
+    Password NVARCHAR(255) NOT NULL,
+    EsAdmin BIT NOT NULL DEFAULT 0, -- 0 para usuario regular, 1 para admin
+    FechaRegistro DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+CREATE TABLE Solicitudes (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100) NOT NULL,
+    Apellido NVARCHAR(100) NOT NULL,
+    Departamento NVARCHAR(100),
+    Telefono NVARCHAR(50),
+    Correo NVARCHAR(255),
+    Categoria NVARCHAR(100),
+    Descripcion NVARCHAR(1000),
+    Estatus NVARCHAR(50), -- Ejemplo: 'Recibido', 'En Proceso', 'Cerrado'
+    FechaRegistro DATETIME NOT NULL DEFAULT GETDATE(),
+    FechaFin DATETIME NULL,
+    AsignadoA NVARCHAR(255), -- Correo del usuario asignado
+    NombrePC NVARCHAR(100),
+    ArchivoNombre NVARCHAR(255) NULL
+);

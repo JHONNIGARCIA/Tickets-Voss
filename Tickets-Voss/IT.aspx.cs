@@ -2,11 +2,14 @@
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Web.UI;
+using System.Net;
+using System.Net.Mail;
 
 namespace Tickets_Voss
 {
     public partial class IT : Page
     {
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
